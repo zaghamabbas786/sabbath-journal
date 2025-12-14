@@ -428,6 +428,8 @@ export default function Home() {
   const [currentInput, setCurrentInput] = useState("");
   const [declaration, setDeclaration] = useState<{ lie: string, truth: string } | null>(null);
   const [hasPaid, setHasPaid] = useState(false);
+  const [isInTrial, setIsInTrial] = useState(false);
+  const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const { toast, showToast, hideToast } = useToast();
 
@@ -521,8 +523,23 @@ export default function Home() {
       console.log('📡 Payment status response:', response.status);
       const data = await response.json();
       console.log('📡 Payment status data:', data);
-      setHasPaid(data.hasPaid || false);
-      console.log('✅ hasPaid set to:', data.hasPaid || false);
+      
+      // hasAccess means either paid or in trial
+      setHasPaid(data.hasAccess || false);
+      setIsInTrial(data.isInTrial || false);
+      setTrialDaysRemaining(data.daysRemaining || 0);
+      
+      console.log('✅ Access status:', {
+        hasAccess: data.hasAccess,
+        isPaid: data.isPaid,
+        isInTrial: data.isInTrial,
+        daysRemaining: data.daysRemaining,
+      });
+      
+      // Show trial notification if in trial
+      if (data.isInTrial && data.daysRemaining > 0) {
+        showToast(`Trial: ${data.daysRemaining} day${data.daysRemaining > 1 ? 's' : ''} remaining`, 'success');
+      }
     } catch (error) {
       console.error('❌ Error checking payment status:', error);
     }
@@ -663,7 +680,12 @@ export default function Home() {
       console.log('Has Paid:', hasPaid);
 
       if (!hasPaid) {
-        console.log('💳 User has NOT paid - initiating payment flow');
+        console.log('💳 User has NOT paid and trial expired - initiating payment flow');
+        
+        // Show message about trial expiration if applicable
+        if (isInTrial) {
+          showToast('Your trial has ended. Please complete payment to continue.', 'error');
+        }
         
         // Store answers in localStorage before redirecting to payment
         const pendingData = {

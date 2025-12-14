@@ -147,6 +147,90 @@ export const userService = {
     console.log('✅ Payment status updated:', data);
     return data as User;
   },
+
+  /**
+   * Check if user is in trial period
+   * @param user - User object from database
+   * @returns true if user is in trial period, false otherwise
+   */
+  isInTrialPeriod(user: User): boolean {
+    const trialPeriodDays = parseInt(process.env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS || '0', 10);
+    
+    // If trial period is 0, no trial
+    if (trialPeriodDays === 0) {
+      console.log('⚠️ Trial period is disabled (TRIAL_PERIOD_DAYS = 0)');
+      return false;
+    }
+
+    // If user has already paid, they're not in trial
+    if (user.has_paid) {
+      console.log('✅ User has already paid');
+      return false;
+    }
+
+    const createdAt = new Date(user.created_at);
+    const now = new Date();
+    const daysSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+
+    console.log('📅 User created:', createdAt.toISOString());
+    console.log('📅 Days since creation:', daysSinceCreation.toFixed(2));
+    console.log('📅 Trial period days:', trialPeriodDays);
+
+    const isInTrial = daysSinceCreation < trialPeriodDays;
+    console.log(isInTrial ? '✅ User is in trial period' : '❌ Trial period expired');
+    
+    return isInTrial;
+  },
+
+  /**
+   * Check if user has access (either paid or in trial)
+   * @param userId - User ID from Clerk
+   * @returns Object with hasAccess, hasPaid, isInTrial, and daysRemaining
+   */
+  async checkUserAccess(userId: string): Promise<{
+    hasAccess: boolean;
+    hasPaid: boolean;
+    isInTrial: boolean;
+    daysRemaining: number;
+  }> {
+    console.log('=== userService.checkUserAccess called ===');
+    console.log('User ID:', userId);
+
+    const user = await this.getUser(userId);
+    
+    if (!user) {
+      console.log(' User not found');
+      return {
+        hasAccess: false,
+        hasPaid: false,
+        isInTrial: false,
+        daysRemaining: 0,
+      };
+    }
+
+    const hasPaid = user.has_paid;
+    const isInTrial = this.isInTrialPeriod(user);
+    const hasAccess = hasPaid || isInTrial;
+
+    // Calculate days remaining in trial
+    let daysRemaining = 0;
+    if (isInTrial) {
+      const trialPeriodDays = parseInt(process.env.NEXT_PUBLIC_TRIAL_PERIOD_DAYS || '0', 10);
+      const createdAt = new Date(user.created_at);
+      const now = new Date();
+      const daysSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+      daysRemaining = Math.max(0, Math.ceil(trialPeriodDays - daysSinceCreation));
+    }
+
+    console.log('✅ Access check result:', { hasAccess, hasPaid, isInTrial, daysRemaining });
+
+    return {
+      hasAccess,
+      hasPaid,
+      isInTrial,
+      daysRemaining,
+    };
+  },
 };
 
 // Database operations

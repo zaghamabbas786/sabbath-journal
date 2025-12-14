@@ -5,6 +5,7 @@
 ## Features
 
 - **Clerk Authentication**: Secure user authentication
+- **Trial Period**: Configurable trial period for new users (0-N days)
 - **Stripe Payments**: One-time payment for full access
 - **Supabase Database**: Cloud database for storing journal entries
 - **Google Gemini AI**: AI-powered spiritual guidance and prompts
@@ -47,10 +48,32 @@
 
    # Google Gemini
    GEMINI_API_KEY=your_gemini_api_key
+
+   # Trial Period (optional)
+   # Set to 0 to disable trial period
+   # Set to any number (e.g., 4) to enable trial for that many days
+   NEXT_PUBLIC_TRIAL_PERIOD_DAYS=4
    ```
 
 3. **Supabase Database Setup:**
-   Create a table called `journal_entries` with the following schema:
+   Run the migration files in `supabase/migrations/` or create tables manually:
+   
+   **Users Table:**
+   ```sql
+   CREATE TABLE users (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     user_id TEXT UNIQUE NOT NULL,
+     name TEXT,
+     email TEXT,
+     has_paid BOOLEAN DEFAULT FALSE,
+     created_at TIMESTAMPTZ DEFAULT NOW(),
+     updated_at TIMESTAMPTZ DEFAULT NOW()
+   );
+
+   CREATE INDEX idx_users_user_id ON users(user_id);
+   ```
+
+   **Journal Entries Table:**
    ```sql
    CREATE TABLE journal_entries (
      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -102,14 +125,30 @@
 - Consistent error handling patterns
 - Single source of truth for configuration
 
-## Payment Flow
+## Payment & Trial Flow
 
 1. User signs up/signs in with Clerk
-2. User clicks "Unlock Full Access" button
-3. Stripe Checkout session is created
-4. User completes payment
-5. Webhook confirms payment
-6. User gains access to create journal entries
+2. User is automatically created in Supabase `users` table
+3. **Trial Period Check:**
+   - If `NEXT_PUBLIC_TRIAL_PERIOD_DAYS` is set (e.g., 4), user gets free access for that many days from account creation
+   - If set to 0, no trial period and payment is required immediately
+   - Trial period is calculated from user's `created_at` timestamp in the database
+4. When trial expires or if no trial:
+   - User clicks "Complete Payment" after finishing journal steps
+   - Stripe Checkout session is created
+   - User completes payment
+   - Payment is verified via Stripe API
+   - User gains permanent access to create journal entries
+
+### Trial Period Configuration
+
+The trial period is controlled by the `NEXT_PUBLIC_TRIAL_PERIOD_DAYS` environment variable:
+- **0**: No trial, payment required immediately
+- **4**: 4-day trial period (recommended)
+- **7**: 7-day trial period
+- **Any number**: N-day trial period
+
+During the trial, users see: "Trial: X days remaining"
 
 ## Database
 

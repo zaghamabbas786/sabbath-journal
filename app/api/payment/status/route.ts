@@ -13,15 +13,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check payment status from users table
-    console.log('🔄 Fetching user from DB...');
-    const user = await userService.getUser(userId);
-    console.log('User from DB:', user);
-    
-    const hasPaid = user?.has_paid ?? false;
-    console.log('✅ Returning hasPaid:', hasPaid);
+    // Check user access (payment + trial)
+    console.log('🔄 Checking user access...');
+    const accessStatus = await userService.checkUserAccess(userId);
+    console.log('Access status:', accessStatus);
 
-    return NextResponse.json({ hasPaid });
+    return NextResponse.json({
+      hasPaid: accessStatus.hasPaid,
+      hasAccess: accessStatus.hasAccess,
+      isInTrial: accessStatus.isInTrial,
+      daysRemaining: accessStatus.daysRemaining,
+    });
   } catch (error) {
     console.error('❌ Error checking payment status:', error);
     return NextResponse.json({ error: 'Failed to check payment status: ' + (error as Error).message }, { status: 500 });
