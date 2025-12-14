@@ -11,6 +11,7 @@ const getAiClient = () => {
 
 const getModel = () => {
   const client = getAiClient();
+  // Using gemini-2.5-flash - smaller model with separate quota
   return client.getGenerativeModel({ model: 'gemini-2.0-flash' });
 };
 
