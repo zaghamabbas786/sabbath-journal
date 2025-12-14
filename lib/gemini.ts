@@ -11,7 +11,7 @@ const getAiClient = () => {
 
 const getModel = () => {
   const client = getAiClient();
-  return client.getGenerativeModel({ model: 'gemini-1.5-flash-002' });
+  return client.getGenerativeModel({ model: 'gemini-2.0-flash' });
 };
 
 export const generateGentleNudge = async (
