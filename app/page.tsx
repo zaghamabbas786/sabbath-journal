@@ -44,7 +44,7 @@ const LandingScreen: React.FC<{
         </div>
         <h1 className="text-5xl md:text-6xl font-serif text-ink tracking-tight">Sabbath</h1>
         <p className="text-lg md:text-xl font-body text-stone-500 italic max-w-md mx-auto">
-          "I see you. I hear you. I am with you."
+          &quot;I see you. I hear you. I am with you.&quot;
         </p>
       </div>
       <div className="flex flex-col gap-4 pt-8">
@@ -149,7 +149,7 @@ const JournalStepScreen: React.FC<{
           </button>
           {nudgeText && (
             <div className="animate-fade-in mt-2 p-4 bg-stone-50 border-l-2 border-gold text-stone-600 font-body italic text-xl">
-              "{nudgeText}"
+              &quot;{nudgeText}&quot;
             </div>
           )}
         </div>
@@ -218,6 +218,7 @@ const DeclarationScreen: React.FC<{
       }
     };
     generate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency - run only once
 
   if (loading) {
@@ -302,6 +303,7 @@ const SummaryScreen: React.FC<{
       }
     };
     fetchBlessing();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency - run only once
 
   return (
@@ -330,7 +332,7 @@ const SummaryScreen: React.FC<{
 
         {blessing && (
           <div className="mt-12 pt-8 border-t border-stone-200 text-center animate-fade-in">
-            <p className="font-serif text-2xl text-gold italic">"{blessing}"</p>
+            <p className="font-serif text-2xl text-gold italic">&quot;{blessing}&quot;</p>
           </div>
         )}
       </div>
@@ -402,7 +404,7 @@ const ArchiveScreen: React.FC<{
               
               {entry.declaration && (
                  <div className="mb-3 pb-3 border-b border-stone-100">
-                    <p className="font-serif text-lg text-ink italic">"My Father is {entry.declaration.truth}"</p>
+                    <p className="font-serif text-lg text-ink italic">&quot;My Father is {entry.declaration.truth}&quot;</p>
                  </div>
               )}
 
@@ -493,6 +495,7 @@ export default function Home() {
     };
 
     handlePaymentReturn();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, user]);
 
   const syncUserData = async () => {

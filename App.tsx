@@ -386,6 +386,7 @@ export default function App() {
     // Persist to local storage
     const newEntry: JournalEntry = {
       id: Date.now().toString(),
+      userId: 'local', // Local storage user
       date: new Date().toISOString(),
       steps: answers,
       declaration: declaration || undefined

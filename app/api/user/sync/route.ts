@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
     // Sync user data to Supabase
     console.log('🔄 Syncing user to Supabase...');
     const user = await userService.createOrUpdateUser(userId, {
-      name: clerkUser.fullName || clerkUser.firstName || null,
-      email: clerkUser.emailAddresses[0]?.emailAddress || null,
+      name: clerkUser.fullName || clerkUser.firstName || undefined,
+      email: clerkUser.emailAddresses[0]?.emailAddress || undefined,
     });
     console.log('✅ User synced:', user);
 

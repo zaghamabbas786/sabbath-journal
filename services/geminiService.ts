@@ -1,13 +1,13 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { StepAnswer } from "../types";
 
 // Helper to get the client
 const getAiClient = () => {
-  if (!process.env.API_KEY) {
-    console.error("API_KEY is missing in environment variables.");
+  if (!process.env.GEMINI_API_KEY) {
+    console.error("GEMINI_API_KEY is missing in environment variables.");
     return null;
   }
-  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 };
 
 export const generateGentleNudge = async (
@@ -45,11 +45,10 @@ export const generateGentleNudge = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
-    return response.text.trim();
+    const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash-002' });
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    return response.text().trim();
   } catch (error) {
     console.error("Error generating nudge:", error);
     return null;
@@ -73,11 +72,10 @@ export const generateBlessing = async (entry: StepAnswer[]): Promise<string | nu
     `;
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-      });
-      return response.text.trim();
+      const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash-002' });
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      return response.text().trim();
     } catch (error) {
       console.error("Error generating blessing:", error);
       return null;
@@ -105,17 +103,22 @@ export const generateScriptureDeclaration = async (entry: StepAnswer[]): Promise
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
+    const model = ai.getGenerativeModel({ 
+      model: 'gemini-1.5-flash-002',
+      generationConfig: {
         responseMimeType: "application/json",
       }
     });
-    
-    const text = response.text;
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
     if (!text) return null;
-    return JSON.parse(text);
+    
+    // Try to extract JSON from the response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return null;
+    
+    return JSON.parse(jsonMatch[0]);
   } catch (error) {
     console.error("Error generating declaration:", error);
     return null;

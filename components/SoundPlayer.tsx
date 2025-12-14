@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { MusicIcon, PlayIcon, PauseIcon, VolumeIcon, XIcon } from './Icons';
-import { SOUNDSCAPES, SoundscapeTrack } from '@/constants';
+import { SOUNDSCAPES } from '@/constants';
+import { SoundscapeTrack } from '@/types';
 
 export const SoundPlayer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
