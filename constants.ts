@@ -59,6 +59,11 @@ export const IMMANUEL_STEPS: JournalStep[] = [
 
 export const SOUNDSCAPES: SoundscapeTrack[] = [
   {
+    id: 'confession',
+    label: 'Confession',
+    src: '/audio/confession.mp3'
+  },
+  {
     id: '432hz',
     label: '432Hz Frequency',
     src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'

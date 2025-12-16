@@ -5,6 +5,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Sabbath Journal',
   description: 'A contemplative, desktop-class journaling application based on the Immanuel approach.',
+  icons: {
+    icon: '/favicon.jpg',
+  },
 };
 
 export default function RootLayout({
