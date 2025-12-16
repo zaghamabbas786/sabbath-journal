@@ -61,21 +61,21 @@ export const SOUNDSCAPES: SoundscapeTrack[] = [
   {
     id: '432hz',
     label: '432Hz Frequency',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/0/09/Singing_Bowl_-_C_note_-_Root_Chakra.ogg/Singing_Bowl_-_C_note_-_Root_Chakra.ogg.mp3'
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
   },
   {
     id: 'rain',
     label: 'Soft Rain',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/3c/Rain_falling_on_roof.ogg/Rain_falling_on_roof.ogg.mp3'
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
   },
   {
     id: 'chant',
     label: 'Monastic Chant',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e3/Salve_Regina_-_Gregorian_Chant.ogg/Salve_Regina_-_Gregorian_Chant.ogg.mp3' 
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' 
   },
   {
     id: 'piano',
     label: 'Sacred Piano',
-    src: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/7/77/Gymnopedie_No_1.ogg/Gymnopedie_No_1.ogg.mp3'
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
   }
 ];
