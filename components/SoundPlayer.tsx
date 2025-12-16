@@ -22,6 +22,9 @@ export const SoundPlayer: React.FC = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Load the new audio source
+    audio.load();
+
     const attemptPlay = async () => {
       if (isPlaying) {
         try {
@@ -64,7 +67,13 @@ export const SoundPlayer: React.FC = () => {
         src={currentTrack.src} 
         loop 
         preload="auto"
-        onError={(e) => console.error("Audio loading error:", e)}
+        crossOrigin="anonymous"
+        onError={(e) => {
+          console.error("Audio loading error for:", currentTrack.label, currentTrack.src);
+          console.error("Error details:", e);
+        }}
+        onCanPlay={() => console.log("Audio can play:", currentTrack.label)}
+        onLoadStart={() => console.log("Audio loading started:", currentTrack.label)}
       />
 
       {isOpen && (

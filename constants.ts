@@ -66,21 +66,21 @@ export const SOUNDSCAPES: SoundscapeTrack[] = [
   {
     id: '432hz',
     label: '432Hz Frequency',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+    src: 'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3'
   },
   {
     id: 'rain',
     label: 'Soft Rain',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+    src: 'https://assets.mixkit.co/sfx/preview/mixkit-rain-and-thunder-1289.mp3'
   },
   {
     id: 'chant',
     label: 'Monastic Chant',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' 
+    src: 'https://assets.mixkit.co/music/preview/mixkit-dreaming-big-31.mp3' 
   },
   {
     id: 'piano',
     label: 'Sacred Piano',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
+    src: 'https://assets.mixkit.co/music/preview/mixkit-piano-reflections-18.mp3'
   }
 ];
